@@ -135,4 +135,4 @@ dmypy.json
 _archived/
 
 # Static dir
-static/
+static/*
