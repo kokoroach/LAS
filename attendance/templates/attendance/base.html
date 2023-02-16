@@ -1,0 +1,59 @@
+ <!-- attendace/templates/attendance/base.html -->
+<!-- <script src="https://unpkg.com/htmx.org@1.7.0"></script> -->
+
+<html>
+  <head>
+    <!-- <title>{% block title %}{% endblock %}</title> -->
+    <title>Library Attendance</title>
+    {% load static %}
+
+    <link rel="icon" type="image/x-icon" href="{% static '\favicon_io\favicon.ico' %}"/>
+    <!-- Load boostrap CSS -->
+    <link rel="stylesheet" href="{% static '\attendance\css\vendor\boostrap\css\bootstrap.min.css' %}">
+    <!-- Load jQuery -->
+    <script src="{% static '\admin\js\vendor\jquery\jquery.js' %}"></script>
+    <!-- Load boostrap JS -->
+    <style src="{% static '\attendance\js\vendor\bootstrap\js\bootstrap.min.js' %}"></style>
+
+
+    <style>
+      .errorlist {
+        position: absolute;
+        left: 0;
+        right: 0;
+        margin-left: auto;
+        margin-right: auto;
+        width: 60.5%;
+        margin-top: -4rem;
+      }
+      .messages {
+        position: absolute;
+        left: 0;
+        right: 0;
+        margin-left: auto;
+        margin-right: auto;
+        width: 60.5%;
+        margin-top: -2rem;
+      }
+      </style>
+  </head>
+
+  <body>
+   {% block attendance-form %}
+   {% endblock %}
+
+    {% block live-attendance %}
+    {% endblock %}
+  </body>
+
+  <script>
+    var message_ele = document.getElementById("message_container");
+
+    // FIXME: Improve hidding, add animation
+    setTimeout(function(){ 
+      // $('.message_container').collapse('toggle'); 
+      message_ele.style.display = 'none';
+    }, 2800);
+  </script> 
+
+<html>

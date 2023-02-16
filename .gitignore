@@ -127,3 +127,12 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+### VSCode ###
+.vscode/
+
+# App-specific
+_archived/
+
+# Static dir
+static/

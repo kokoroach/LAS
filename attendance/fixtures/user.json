@@ -1,0 +1,59 @@
+[
+    {
+        "model": "attendance.user",
+        "pk": "9e3af618-3cbe-4377-9213-b2187e6e3c14",
+        "fields": {
+            "password": "pbkdf2_sha256$390000$413uYzqYcUSg2EW0LKXRP2$ikxNg39En7QWWgGS705rNKCPohMMnRR0lfs5hYPoGwQ=",
+            "last_login": "2023-01-22 16:50:33",
+            "is_superuser": "1",
+            "groups": "",
+            "user_permissions": "",
+            "username": "admin",
+            "first_name": "",
+            "last_name": "",
+            "email": "",
+            "is_staff": "1",
+            "is_active": "1",
+            "date_joined": "2023-01-22 16:50:14",
+            "middle_name": ""
+        }
+    },
+    {
+        "model": "attendance.user",
+        "pk": "4d0fe433-01bf-4afc-8fcf-de4c08a154e6",
+        "fields": {
+            "password": "pbkdf2_sha256$390000$yGi9UvRlCsOD6xOVD7QIal$tfvmyDDifR3BtBlD+LXmZlHMKjt2WXYnyq24mQesIw8=",
+            "last_login": "2023-01-22 17:19:37",
+            "is_superuser": "0",
+            "groups": "",
+            "user_permissions": "",
+            "username": "staff1",
+            "first_name": "Juan",
+            "last_name": "dela Cruz",
+            "email": "",
+            "is_staff": "1",
+            "is_active": "1",
+            "date_joined": "2023-01-22 17:19:37",
+            "middle_name": ""
+        }
+    },
+    {
+        "model": "attendance.user",
+        "pk": "c5494a66-d31b-478f-ba87-9cbf65c6b194",
+        "fields": {
+            "password": "pbkdf2_sha256$390000$xmViBQ5qJCG3gFNzyZnzAk$jzU9Wa77oCdyybH3+EQX8ixuKOFtbtdI6j4aMeMOgnA=",
+            "last_login": "2023-01-22 17:20:22",
+            "is_superuser": "0",
+            "groups": "",
+            "user_permissions": "",
+            "username": "student_1",
+            "first_name": "Mario",
+            "last_name": "Boro",
+            "email": "",
+            "is_staff": "0",
+            "is_active": "1",
+            "date_joined": "2023-01-22 17:20:22",
+            "middle_name": ""
+        }
+    }
+]

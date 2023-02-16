@@ -1,0 +1,18 @@
+[
+    {
+        "model": "attendance.course",
+        "pk": 1,
+        "fields": {
+            "code": "BSCS",
+            "name": "BS Computer Science"
+        }
+    },
+    {
+        "model": "attendance.course",
+        "pk": 2,
+        "fields":{
+            "code": "BSIT",
+            "name": "BS Information Technology"
+        }
+    }
+]
