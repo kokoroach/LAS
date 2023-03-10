@@ -17,14 +17,6 @@ class User(AbstractUser):
         return self.get_username()
 
 
-class YearLevel(models.IntegerChoices):
-    FIRST = 1, '1'
-    SECOND = 2, '2'
-    THIRD = 3, '3'
-    FOURTH = 4, '4'
-    FIFTH = 5, '5'
-
-
 class Course(models.Model):
     code = models.CharField(max_length=15)
     name = models.CharField(max_length=100, blank=True)
@@ -34,6 +26,18 @@ class Course(models.Model):
 
 
 class Student(models.Model):
+
+    class Sex(models.TextChoices):
+        MALE = "m", "Male"
+        FEMALE = "f", "Female"
+
+    class YearLevel(models.IntegerChoices):
+        FIRST = 1, '1'
+        SECOND = 2, '2'
+        THIRD = 3, '3'
+        FOURTH = 4, '4'
+        FIFTH = 5, '5'
+
     user = models.OneToOneField(User, on_delete=models.CASCADE, null=True)
     student_id = models.CharField(max_length=100, unique=True)
     course = models.ForeignKey(Course, null=True, on_delete=models.SET_NULL)
@@ -41,8 +45,7 @@ class Student(models.Model):
         choices=YearLevel.choices,
         default=YearLevel.FIRST
     )
-
-    user_cache = None
+    sex = models.CharField(max_length=1, choices=Sex.choices, default=Sex.MALE)
 
     def __str__(self):
         return str(self.user)

@@ -31,6 +31,7 @@ class Command(BaseCommand):
         last_name = last_name.strip().title()
         first_name, middle_name = split_name(other_name)
         student_id = student['ID No.']
+        sex = 'm' if student['Sex'].lower() == 'male' else 'f'
         course_code = student['Course']
         year = int(student['Year'][0])
 
@@ -47,6 +48,7 @@ class Command(BaseCommand):
                 student = Student.objects.create(
                     user=user,
                     student_id=student_id,
+                    sex=sex,
                     course=course,
                     year=year
                 )
