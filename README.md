@@ -25,7 +25,7 @@ Ready the pre-prequisite for local development
 B. Prepate Data for Import
 We will prepare student data for import later
 
-1. Convert the *.xlsx file to .csv and Ensure that header is at row 0
+1. IMPORTANT! Convert the *.xlsx file to `.csv` and Ensure that header is at row 0
 2. Save it within project folder. Recommen data project dir is `/student_data`
 
 
@@ -82,3 +82,22 @@ G. Stopping Image
 1. CTRL+C or CMD+C
 2. Make the image is stopped
 3. Else, run `docker compose down`
+
+
+OTHER INFO:
+
+Django uses MVC~ish (Model-View-Controller), which can be mapped in the project as:
+
+1. MODEL. Interface to the DB
+ - exists in: attendance\models.py
+ - data migration in: attendance\migrations
+
+2. VIEW. The UI Logic
+ - exists in: attendance\templates\attendance
+
+3. CONTROLLER: Interface between View and the App
+ - exists in: attendance\views.py
+ - Admin: attendance\admin.py 
+
+SEE:
+https://data-flair.training/blogs/django-architecture/#:~:text=MVC%20Pattern%20in%20Django%20Structure,to%20organize%20in%20the%20database.

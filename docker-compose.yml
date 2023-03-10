@@ -6,8 +6,8 @@ services:
     build: 
       context: .
       dockerfile: Dockerfile.local
-    image: los_app:dev
-    container_name: los_app
+    image: las_app:dev
+    container_name: las_app
     restart: "on-failure"
 
     depends_on:
