@@ -4,7 +4,7 @@ import csv
 from django.core.management.base import BaseCommand
 from django.db import transaction
 
-from attendance.models import Student, Course, student_exists
+from attendance.models import User, Student, Course, student_exists
 from attendance.utils import split_name
 
 
@@ -44,7 +44,9 @@ class Command(BaseCommand):
 
         if not student_exists(student_id):
             with transaction.atomic():
-                user = Student.create_student_user(student_id, **_user)
+                Student.update_or_create_student_user(student_id, _user)
+                user = User.objects.get(username=student_id)
+
                 student = Student.objects.create(
                     user=user,
                     student_id=student_id,

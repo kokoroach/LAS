@@ -23,7 +23,7 @@ def render_index(
     )
 
 
-def index(request, refresh=False):
+def index(request, refresh=True):
     form = AttendanceForm(error_class=DivErrorList)
     return render_index(request, form, refresh=refresh)
 

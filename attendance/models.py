@@ -51,8 +51,10 @@ class Student(models.Model):
         return str(self.user)
 
     @classmethod
-    def create_student_user(cls, student_id, **kwargs):
-        return User.objects.create(username=student_id, **kwargs)
+    def update_or_create_student_user(cls, student_id, data):
+        return User.objects.update_or_create(
+            username=student_id, defaults=data
+        )
 
     @property
     def first_name(self):
