@@ -2,7 +2,7 @@ import uuid
 
 from django.contrib.auth.models import AbstractUser
 from django.db import models
-from django.utils.timezone import now
+from django.utils.timezone import now, timedelta
 
 
 class User(AbstractUser):
@@ -71,6 +71,24 @@ class Attendance(models.Model):
 
     def __str__(self):
         return str(self.student)
+
+    @classmethod
+    def has_recent_login(cls, student_id):
+        delta = now() - timedelta(minutes=2)
+
+        attendance = (
+            cls.objects
+            .filter(student__student_id=student_id,
+                    login_ts__gte=delta)
+            .order_by('-login_ts')
+            .first()
+        )
+        if attendance:
+            actual_delta = attendance.login_ts - delta
+            next_min = round((actual_delta.seconds) / 60) or 1
+            return (next_min, True)
+
+        return (None, False)
 
 
 def student_exists(student_id):

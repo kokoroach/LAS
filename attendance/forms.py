@@ -3,7 +3,7 @@ from django.core.exceptions import ValidationError
 from django.forms.utils import ErrorList
 from django.utils.translation import gettext_lazy as _
 
-from attendance.models import student_exists
+from attendance.models import student_exists, Attendance
 
 
 class DivErrorList(ErrorList):
@@ -51,8 +51,18 @@ class AttendanceForm(forms.Form):
     )
 
     def clean_student_id(self):
+        # Check if this student exists
         student_id = self.cleaned_data['student_id']
         if not student_exists(student_id):
             raise ValidationError("Student ID not found: %s" % student_id)
+
+        # Check if this student has recently loggedin
+        next_min, has_logged = Attendance.has_recent_login(student_id)
+        if has_logged:
+            unit = 'minute' if next_min == 1 else 'minutes'
+            raise ValidationError(
+                "Student has recent login. Please login again "
+                "after %s %s." % (next_min, unit)
+            )
 
         return student_id
