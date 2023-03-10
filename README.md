@@ -12,21 +12,21 @@ Ready the pre-prequisite for local development
 2. Create your python virtual env
     - python3 -m venv /path/to/new/virtual/environment
 
-3. Activate environtment:
+3. Activate environment:
     - (for Windows):
         `source /path/to/new/virtual/environment/Scripts/activate`
     - (for Linux/Mac):
         `source /path/to/new/virtual/environment/bin/activate`
 
 4. Install the python requirements
-    - pip3 install requirements.txt
+    - pip3 install -r requirements.txt
 
 
 B. Prepate Data for Import
 We will prepare student data for import later
 
 1. Convert the *.xlsx file to .csv and Ensure that header is at row 0
-2. Save it somewhere within the project dir (preferrably on attendance/data)
+2. Save it within project folder. Recommen data project dir is `/student_data`
 
 
 C. Setup Docker
@@ -58,7 +58,11 @@ E. Load Users
 1. Load users that was processed from (B)
     - `docker ps`
     - `docker exec -it <CONTAINER_ID> sh`
-    - `python manage.py load_users <CSV_DATA_PATH>`
+    
+    if you've used the recommended student_data path, the use:
+    - `python manage.py load_users student_data/<FILE_NAME>`
+    else
+    -  `python manage.py load_users <CSV_DATA_PATH>`
 
 2. Log-in to Django Admin Panel
     - localhost:8080/admin
