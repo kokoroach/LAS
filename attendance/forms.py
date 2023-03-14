@@ -61,8 +61,7 @@ class AttendanceForm(forms.Form):
         if has_logged:
             unit = 'minute' if next_min == 1 else 'minutes'
             raise ValidationError(
-                "Student has recent login. Please login again "
-                "after %s %s." % (next_min, unit)
+                "Please login again after %s %s." % (next_min, unit)
             )
 
         return student_id

@@ -17,8 +17,17 @@ from .models import Attendance, Course, Student, User
 class StudentForm(forms.ModelForm):
 
     def save(self, commit=True):
-        student_id = self.cleaned_data['student_id']
-        self.instance.user = Student.create_student_user(student_id)
+        student_id = self.cleaned_data.get('student_id')
+
+        # Performs create
+        if student_id:
+            Student.update_or_create_student_user(student_id, {})
+            user = User.objects.get(username=student_id)
+            self.instance.user = user
+        # Performs update
+        else:
+            # Process as-is
+            pass
 
         return super(StudentForm, self).save(commit=commit)
 
