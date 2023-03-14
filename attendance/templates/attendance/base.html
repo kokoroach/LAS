@@ -35,16 +35,49 @@
         width: 60.5%;
         margin-top: -2rem;
       }
-      </style>
+      .footer {
+        position: fixed;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        background-color: #212529;
+        padding: 0.5rem;
+      }
+      #foot-flaticon{
+        text-align: right;
+      }
+      #foot-flaticon > a {
+        color: white !important;
+        font-size: 12px !important;
+        text-decoration: none;
+      }
+      .gender-icon {
+        width: 3rem;
+        padding-right: 1.5rem;
+      }
+    </style>
   </head>
 
   <body>
-   {% block attendance-form %}
-   {% endblock %}
+    {% block attendance-form %}
+    {% endblock %}
 
     {% block live-attendance %}
     {% endblock %}
   </body>
+
+  <div id="footer" class="footer">
+    <div id="footer-content" class="container">
+      <div class="row">
+        <div class="col"></div>
+        <div class="col">
+          <div id="foot-flaticon"class="px-md-5">
+            <a href="https://www.flaticon.com/free-icons/person" title="person icons">Person icons created by Freepik - Flaticon</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <script>
     var message_ele = document.getElementById("message_container");
