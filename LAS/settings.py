@@ -83,12 +83,12 @@ WSGI_APPLICATION = 'LAS.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'ENGINE': 'django.db.backends.mysql',
         'HOST':     env.str('DB_HOST'),
         'PORT':     env.int('DB_PORT'),
         'NAME':     env.str('DB_NAME'),
-        'USER':     env.str('DB_USER'),
-        'PASSWORD': env.str('DB_USER_PASSWORD'),
+        'USER':     env.str('DB_ROOT_USER'),
+        'PASSWORD': env.str('DB_ROOT_PASSWORD'),
     }
 }
 
@@ -117,7 +117,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Manila'
 
 USE_I18N = True
 
