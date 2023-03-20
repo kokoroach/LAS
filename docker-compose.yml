@@ -28,24 +28,28 @@ services:
                     python manage.py runserver 0.0.0.0:8000"
 
   db:
-    image: postgres:11-alpine 
-    container_name: postgres
+    image: mysql:8.0.32
+    container_name: mysql
     restart: "on-failure"
 
     ports:
-      - "5431:5432"
+    - "3306:3306"
     volumes:
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
-      - postgres_data:/var/lib/postgresql/data/
+      - mysql_data:/var/lib/mysql/
 
-    # access credentials from the .env file
-    environment: 
-      - POSTGRES_DB=${DB_NAME}
-      - PGPORT=${DB_PORT}
-      - POSTGRES_USER=${DB_USER}
-      - POSTGRES_PASSWORD=${DB_USER_PASSWORD}
+    # NOTE: use of "mysql_native_password" is not recommended:
+    # https://dev.mysql.com/doc/refman/8.0/en/upgrading-from-previous-series.html#upgrade-caching-sha2-password
+    # (this is just an example, not intended to be a production configuration)
+    command: --authentication_policy=mysql_native_password
+
+    environment:
+      - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASSWORD}
+      - MYSQL_DATABASE=${DB_NAME}
+      - MYSQL_USER=${DB_USER}
+      - MYSQL_PASSWORD=${DB_USER_PASSWORD}
 
 
 volumes:
-  postgres_data:
+  mysql_data:
   static_volume:
