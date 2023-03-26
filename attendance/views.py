@@ -1,6 +1,6 @@
 from django.contrib import messages
 from django.http.response import JsonResponse
-from django.shortcuts import render
+from django.shortcuts import render, redirect, reverse
 
 from attendance.forms import AttendanceForm, DivErrorList
 from attendance.models import Attendance, Student
@@ -19,13 +19,13 @@ def render_index(
     return render(
         request,
         'attendance/index.html',
-        {'form': form, 'attendance': attendance_cache}
+        context={'form': form, 'attendance': attendance_cache}
     )
 
 
-def index(request, refresh=True):
+def index(request):
     form = AttendanceForm(error_class=DivErrorList)
-    return render_index(request, form, refresh=refresh)
+    return render_index(request, form, refresh=True)
 
 
 def add_attendance(request):
@@ -43,7 +43,7 @@ def add_attendance(request):
             welcome = 'Welcome back, %s!' % student.first_name
             messages.success(request, welcome)
 
-            return render_index(request, form, refresh=True)
+            return redirect(reverse('index'))
         else:
             return render_index(request, form, refresh=True)
 

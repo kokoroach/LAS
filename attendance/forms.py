@@ -16,7 +16,8 @@ class DivErrorList(ErrorList):
             return ''
 
         error_class = 'alert alert-danger'
-        return '<div class="errorlist">%s</div>' % ''.join(
+        error_div = '<div class="errorlist">%s</div>'
+        return error_div % ''.join(
             ['<div class="%s">%s</div>' % (error_class, e) for e in self]
         )
 

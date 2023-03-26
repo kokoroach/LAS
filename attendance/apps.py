@@ -11,9 +11,13 @@ class AttendanceConfig(AppConfig):
     group_permissions = [
         (
             'staff_admin', {
-                'attendance': ['add', 'change', 'delete', 'view']
+                'attendance': ['add', 'change', 'delete', 'view'],
+                'student': ['view'],
+                'course': ['view'],
             }
         ),
     ]
     for group_name, permissions in group_permissions:
-        post_migrate.connect(assign_group_permissions(group_name, permissions))
+        post_migrate.connect(
+            assign_group_permissions(name, group_name, permissions)
+        )

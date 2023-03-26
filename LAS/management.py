@@ -2,7 +2,7 @@ from django import apps as global_apps
 from django.db.models import Q
 
 
-def assign_group_permissions(group_name, permissions):
+def assign_group_permissions(app_label, group_name, permissions):
 
     def receiver(*args, apps=global_apps, **kwargs):
         try:
@@ -12,9 +12,9 @@ def assign_group_permissions(group_name, permissions):
             return
 
         perm_q = Q()
-        for app_label, perm_types in permissions.items():
+        for model, perm_types in permissions.items():
             for perm_type in perm_types:
-                codename = '%s_%s' % (perm_type, app_label)
+                codename = '%s_%s' % (perm_type, model)
                 perm_q |= (
                     Q(content_type__app_label=app_label)
                     & Q(codename=codename)
