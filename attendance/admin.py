@@ -72,8 +72,8 @@ class StudentAdmin(ExportMixin, admin.ModelAdmin):
     list_display = (
         'user', '_last_name', '_first_name', 'course', 'year', 'student_id'
     )
+    search_fields = ['student_id', 'user__first_name', 'user__last_name']
     list_filter = ['course', 'year']
-    search_fields = ['student_id']
 
     @admin.display(ordering='user__first_name', description='First Name')
     def _first_name(self, obj):
@@ -133,8 +133,13 @@ class AttendanceAdmin(ExportMixin, admin.ModelAdmin):
         'login_ts'
     )
     list_filter = ('student__course', 'student__year')
+    search_fields = [
+        'student__student_id', 'student__user__first_name',
+        'student__user__last_name'
+    ]
 
     _readonly_fields = ('student',)
+    raw_id_fields = ('student',)
     resource_class = AttendanceResource
 
     @admin.display(ordering='student__course', description='Course')
