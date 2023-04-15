@@ -1,19 +1,19 @@
 # Django
 from django import forms
+from django.db.models import Count
 from django.contrib import admin
 from django.contrib.admin import ModelAdmin
 from django.contrib.auth.admin import UserAdmin
 # from django.utils.translation import gettext_lazy as _
 
 # Third-party
-from import_export import resources
 from import_export.admin import ExportMixin
 from import_export.fields import Field
 from import_export.resources import ModelResource
 from import_export.widgets import ForeignKeyWidget
 
 # In-app
-from .models import Attendance, Course, Student, User
+from .models import Attendance, AttendanceSummary, Course, Student, User
 
 
 class StudentForm(forms.ModelForm):
@@ -172,7 +172,62 @@ class AttendanceAdmin(ExportMixin, ModelAdmin):
         return ()
 
 
+class AttendanceSummaryAdmin(ModelAdmin):
+    """
+    # Custom Attendance Summary Dashboard
+    # from: https://hakibenita.medium.com/how-to-turn-django-admin-into-a-lightweight-dashboard-a0e0bbf609ad
+    """
+
+    change_list_template = 'admin/attendance_summary_change_list.html'
+    date_hierarchy = 'login_ts'
+
+    # Disable Add Model button
+    def has_add_permission(self, request, obj=None):
+        return False
+
+    def changelist_view(self, request, extra_context=None):
+        response = super().changelist_view(
+            request,
+            extra_context=extra_context,
+        )
+        try:
+            qs = response.context_data['cl'].queryset
+        except (AttributeError, KeyError):
+            return response
+
+        # ------------------
+        # Student Summary
+        # ------------------
+        student_qs = (
+            qs
+            .values('student__id')
+            .aggregate(unique_attendees=Count('student__id', distinct=True))
+        )
+        student_qs['total_students'] = Student.objects.all().count()
+
+        response.context_data['student_summary'] = dict(student_qs)
+
+        # ------------------
+        # Course Summary
+        # ------------------
+        metrics = {
+            'total_attendance': Count('student__course__name')
+        }
+        response.context_data['summary'] = list(
+            qs
+            .values('student__course__code', 'student__course__name')
+            .annotate(**metrics)
+            .order_by('-total_attendance')
+        )
+        response.context_data['summary_total'] = dict(
+            qs.aggregate(**metrics)
+        )
+
+        return response
+
+
 admin.site.register(Attendance, AttendanceAdmin)
 admin.site.register(Course, CourseAdmin)
 admin.site.register(Student, StudentAdmin)
 admin.site.register(User, CustomUserAdmin)
+admin.site.register(AttendanceSummary, AttendanceSummaryAdmin)

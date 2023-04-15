@@ -90,6 +90,17 @@ class Attendance(models.Model):
 
         return (None, False)
 
+    @classmethod
+    def get_unique_attendees(cls):
+        return cls.objects.values('student').distinct().count()
+
+
+class AttendanceSummary(Attendance):
+    class Meta:
+        proxy = True
+        verbose_name = 'Attendance Summary'
+        verbose_name_plural = 'Attendance Summary'
+
 
 def student_exists(student_id):
     return Student.objects.filter(student_id=student_id).exists()
