@@ -1,6 +1,7 @@
 # Django
 from django import forms
 from django.contrib import admin
+from django.contrib.admin import ModelAdmin
 from django.contrib.auth.admin import UserAdmin
 # from django.utils.translation import gettext_lazy as _
 
@@ -8,6 +9,7 @@ from django.contrib.auth.admin import UserAdmin
 from import_export import resources
 from import_export.admin import ExportMixin
 from import_export.fields import Field
+from import_export.resources import ModelResource
 from import_export.widgets import ForeignKeyWidget
 
 # In-app
@@ -61,11 +63,11 @@ class CustomUserAdmin(UserAdmin):
         return tuple(new_fieldsets)
 
 
-class CourseAdmin(ExportMixin, admin.ModelAdmin):
+class CourseAdmin(ExportMixin, ModelAdmin):
     list_display = ('code', 'name')
 
 
-class StudentAdmin(ExportMixin, admin.ModelAdmin):
+class StudentAdmin(ExportMixin, ModelAdmin):
     form = StudentForm
 
     _readonly_fields = ('user', 'student_id', '_last_name', '_first_name')
@@ -89,7 +91,7 @@ class StudentAdmin(ExportMixin, admin.ModelAdmin):
         return ()
 
 
-class AttendanceResource(resources.ModelResource):
+class AttendanceResource(ModelResource):
 
     _id = Field(column_name="ID", attribute="id")
     student = Field(
@@ -127,7 +129,7 @@ class AttendanceResource(resources.ModelResource):
         )
 
 
-class AttendanceAdmin(ExportMixin, admin.ModelAdmin):
+class AttendanceAdmin(ExportMixin, ModelAdmin):
     list_display = (
         'student', '_last_name', '_first_name', 'get_course', 'get_year',
         'login_ts'
