@@ -1,0 +1,109 @@
+{% extends "admin/change_list.html" %}
+
+{% load humanize %}
+{% load attendance_extras %}
+
+{% block content_title %}
+  <h1> Attendance Summary </h1>
+{% endblock %}
+
+{% block result_list %}
+
+<div class="results_2">
+  <h2> Student Summary </h2>
+  <table>
+    <thead>
+      <tr>
+        <th>
+          <div class="text">
+            <a href="#"></a>
+          </div>
+        </th>
+        <th>
+          <div class="text">
+            <a href="#">Unique Student Attendees</a>
+          </div>
+        </th>
+        <th>
+          <div class="text">
+            <a href="#">Total Number of Students</a>
+          </div>
+        </th>
+        <th>
+          <div class="text">
+            <a href="#">% of Total Student</a>
+          </div>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr style="font-weight:bold; border-top:2px solid #DDDDDD;">
+        <td>Summary</td>
+        <td> {{ student_summary.unique_attendees }} </td>
+        <td> {{ student_summary.total_students }} </td>
+        <td> {{ student_summary.unique_attendees | default:0 |  percentof:student_summary.total_students }}</td>
+      </tr>
+    </tbody>
+  </table>
+
+</div>
+
+<br />
+<br />
+
+<div class="results">
+  <h2> Course Summary </h2>
+  <table>
+    <thead>
+      <tr>
+        <th>
+          <div class="text">
+            <a href="#">Code</a>
+          </div>
+        </th>
+        <th>
+          <div class="text">
+            <a href="#">Course</a>
+          </div>
+        </th>
+        <th>
+          <div class="text">
+            <a href="#">Total</a>
+          </div>
+        </th>
+        <th>
+          <div class="text">
+            <a href="#">
+              <strong>% of Total Attendance</strong>
+            </a>
+          </div>
+        </th>
+      </tr>
+    </thead>
+
+    <tbody>
+    {% for row in summary %}
+      <tr class="{% cycle 'row1' 'row2' %}">
+        <td> {{ row.student__course__code }} </td>
+        <td> {{ row.student__course__name }} </td>
+        <td> {{ row.total_attendance | intcomma }} </td>
+        <td>
+          <strong> {{ row.total_attendance | default:0 |  percentof:summary_total.total_attendance }} </strong>
+        </td>
+      </tr>
+    {% endfor %}
+
+      <tr style="font-weight:bold; border-top:2px solid #DDDDDD;">
+        <td> Total </td>
+        <td></td>
+        <td> {{ summary_total.total_attendance | intcomma }} </td>
+        <td> 100% </td>
+      </tr>
+    </tbody>
+
+  </table>
+</div>
+
+{% endblock %}
+
+{% block pagination %}{% endblock %}
