@@ -4,32 +4,7 @@ from django.forms.utils import ErrorList
 from django.utils.translation import gettext_lazy as _
 
 from attendance.models import student_exists, Attendance
-
-
-class utils:
-
-    @classmethod
-    def pluralize(cls, count, singular, plural=None):
-        if not plural:
-            plural = singular + 's'
-        unit = singular if float(count) == 1.0 else plural
-        return '%s %s' % (count, unit)
-
-    @classmethod
-    def format_timespan(cls, seconds):
-        hours, seconds = divmod(seconds, 60*60)
-        minutes, seconds = divmod(seconds, 60)
-
-        hours_str = cls.pluralize(hours, 'hour')
-        minutes_str = cls.pluralize(minutes, 'minute')
-        seconds_str = cls.pluralize(seconds, 'second')
-
-        if hours:
-            return '%s %s' % (hours_str, minutes_str)
-        elif minutes:
-            return '%s %s' % (minutes_str, seconds_str)
-        else:
-            return '%s' % seconds_str
+from attendance import utils
 
 
 class DivErrorList(ErrorList):
