@@ -74,7 +74,7 @@ class Attendance(models.Model):
 
     @classmethod
     def has_recent_login(cls, student_id):
-        delta = now() - timedelta(minutes=2)
+        delta = now() - timedelta(hours=2)
 
         attendance = (
             cls.objects
@@ -85,8 +85,8 @@ class Attendance(models.Model):
         )
         if attendance:
             actual_delta = attendance.login_ts - delta
-            next_min = round((actual_delta.seconds) / 60) or 1
-            return (next_min, True)
+            next_seconds = actual_delta.seconds
+            return (next_seconds, True)
 
         return (None, False)
 
