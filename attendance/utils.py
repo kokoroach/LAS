@@ -4,7 +4,7 @@ from attendance.models import Attendance
 
 
 def _get_attendance():
-    limit = 10
+    limit = 5
     attendance = (
         Attendance.objects.all()
         .order_by('-login_ts')
