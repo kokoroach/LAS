@@ -9,9 +9,9 @@ django-environ==0.9.0
 django-import-export==3.0.2
 et-xmlfile==1.1.0
 flake8==6.0.0
-# gunicorn
 MarkupPy==1.14
 mccabe==0.7.0
+mysqlclient==2.1.1
 odfpy==1.4.1
 openpyxl==3.0.10
 Pillow==9.5.0
