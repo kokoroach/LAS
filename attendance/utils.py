@@ -8,7 +8,7 @@ def pluralize(count, singular, plural=None):
     return '%s %s' % (count, unit)
 
 
-def format_timespan(cls, seconds):
+def format_timespan(seconds):
     hours, seconds = divmod(seconds, 60*60)
     minutes, seconds = divmod(seconds, 60)
 
