@@ -1,4 +1,4 @@
- <!-- attendace/templates/attendance/base.html -->
+<!-- attendace/templates/attendance/base.html -->
 <!-- <script src="https://unpkg.com/htmx.org@1.7.0"></script> -->
 
 <html>
@@ -8,54 +8,15 @@
     {% load static %}
 
     <link rel="icon" type="image/x-icon" href="{% static '\favicon_io\favicon.ico' %}"/>
-    <!-- Load boostrap CSS -->
+    <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="{% static '\attendance\css\vendor\boostrap\css\bootstrap.min.css' %}">
-    <!-- Load jQuery -->
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{% static '\attendance\css\main.css' %}">
+
+    <!-- Query -->
     <script src="{% static '\admin\js\vendor\jquery\jquery.js' %}"></script>
-    <!-- Load boostrap JS -->
+    <!-- BooostrapJS -->
     <style src="{% static '\attendance\js\vendor\bootstrap\js\bootstrap.min.js' %}"></style>
-
-
-    <style>
-      .errorlist {
-        position: absolute;
-        left: 0;
-        right: 0;
-        margin-left: auto;
-        margin-right: auto;
-        width: 60.5%;
-        margin-top: -4rem;
-      }
-      .messages {
-        position: absolute;
-        left: 0;
-        right: 0;
-        margin-left: auto;
-        margin-right: auto;
-        width: 60.5%;
-        margin-top: -2rem;
-      }
-      .footer {
-        position: fixed;
-        left: 0;
-        bottom: 0;
-        width: 100%;
-        background-color: #212529;
-        padding: 0.5rem;
-      }
-      #foot-flaticon{
-        text-align: right;
-      }
-      #foot-flaticon > a {
-        color: white !important;
-        font-size: 12px !important;
-        text-decoration: none;
-      }
-      .gender-icon {
-        width: 3rem;
-        padding-right: 1.5rem;
-      }
-    </style>
   </head>
 
   <body>

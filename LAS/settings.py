@@ -46,6 +46,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.humanize',
     'import_export',
+    'colorfield',
+    'chartjs',
 ]
 
 MIDDLEWARE = [

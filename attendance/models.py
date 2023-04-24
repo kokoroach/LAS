@@ -2,7 +2,10 @@ import uuid
 
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from django.utils.html import format_html
 from django.utils.timezone import now, timedelta
+
+from colorfield.fields import ColorField
 
 
 class User(AbstractUser):
@@ -20,6 +23,14 @@ class User(AbstractUser):
 class Course(models.Model):
     code = models.CharField(max_length=15)
     name = models.CharField(max_length=100, blank=True)
+    hexcolor = ColorField(default="#FF0000")
+
+    def color(self):
+        return format_html(
+            '<span style="color: {};">{}</span>',
+            self.hexcolor,
+            self.hexcolor,
+        )
 
     def __str__(self):
         return self.code
@@ -74,7 +85,7 @@ class Attendance(models.Model):
 
     @classmethod
     def has_recent_login(cls, student_id):
-        delta = now() - timedelta(minutes=2)
+        delta = now() - timedelta(hours=2)
 
         attendance = (
             cls.objects
@@ -85,8 +96,8 @@ class Attendance(models.Model):
         )
         if attendance:
             actual_delta = attendance.login_ts - delta
-            next_min = round((actual_delta.seconds) / 60) or 1
-            return (next_min, True)
+            next_seconds = actual_delta.seconds
+            return (next_seconds, True)
 
         return (None, False)
 

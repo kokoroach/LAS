@@ -1,16 +1,37 @@
-import re
-
 from attendance.models import Attendance
 
 
+def pluralize(count, singular, plural=None):
+    if not plural:
+        plural = singular + 's'
+    unit = singular if float(count) == 1.0 else plural
+    return '%s %s' % (count, unit)
+
+
+def format_timespan(cls, seconds):
+    hours, seconds = divmod(seconds, 60*60)
+    minutes, seconds = divmod(seconds, 60)
+
+    HH = pluralize(hours, 'hour')
+    MM = pluralize(minutes, 'minute')
+    SS = pluralize(seconds, 'second')
+
+    if hours:
+        return '%s %s' % (HH, MM)
+    elif minutes:
+        return '%s %s' % (MM, SS)
+    else:
+        return '%s' % SS
+
+
 def _get_attendance():
-    limit = 10
+    LIMIT = 5
     attendance = (
         Attendance.objects.all()
         .order_by('-login_ts')
         .select_related('student')
     )
-    return attendance[:limit]
+    return attendance[:LIMIT]
 
 
 def refresh_attendance():
@@ -19,30 +40,3 @@ def refresh_attendance():
 
 
 attendance_cache = refresh_attendance()
-
-
-LNAME_PREFIX = ['DE LO', 'DE LA', 'DE LAS', 'DEL', 'DOS', 'DAS', 'DE', 'DELAS']
-
-
-def split_name(name):
-    name = name.upper()
-    form = "(.*)({}(.+))".format("(" + " |".join(LNAME_PREFIX) + ")")
-
-    def sanitized_name(names):
-        return [name.strip().title() for name in names]
-
-    f1 = re.compile(form)
-    m1 = f1.match(name)
-    if m1:
-        if len(m1.group(1)) != 0:
-            name = [m1.group(1), m1.group(2)]
-        else:
-            name = [name.split()[-1], " ".join(name.split()[:-1])]
-    else:
-        if len(name.split()) == 1:
-            # No middle name
-            name = [name, '']
-        else:
-            name = [" ".join(name.split()[:-1]), name.split()[-1]]
-
-    return sanitized_name(name)
