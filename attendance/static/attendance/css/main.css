@@ -1,0 +1,43 @@
+.errorlist {
+  position: absolute;
+  left: 0;
+  right: 0;
+  margin-left: auto;
+  margin-right: auto;
+  width: 60.5%;
+  margin-top: -4rem;
+}
+
+.messages {
+  position: absolute;
+  left: 0;
+  right: 0;
+  margin-left: auto;
+  margin-right: auto;
+  width: 60.5%;
+  margin-top: -2rem;
+}
+
+.footer {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  background-color: #212529;
+  padding: 0.5rem;
+}
+
+#foot-flaticon{
+  text-align: right;
+}
+
+#foot-flaticon > a {
+  color: white !important;
+  font-size: 12px !important;
+  text-decoration: none;
+}
+
+.gender-icon {
+  width: 3rem;
+  padding-right: 1.5rem;
+}
