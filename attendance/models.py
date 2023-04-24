@@ -2,7 +2,10 @@ import uuid
 
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from django.utils.html import format_html
 from django.utils.timezone import now, timedelta
+
+from colorfield.fields import ColorField
 
 
 class User(AbstractUser):
@@ -20,6 +23,14 @@ class User(AbstractUser):
 class Course(models.Model):
     code = models.CharField(max_length=15)
     name = models.CharField(max_length=100, blank=True)
+    hexcolor = ColorField(default="#FF0000")
+
+    def color(self):
+        return format_html(
+            '<span style="color: {};">{}</span>',
+            self.hexcolor,
+            self.hexcolor,
+        )
 
     def __str__(self):
         return self.code

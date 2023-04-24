@@ -64,7 +64,7 @@ class CustomUserAdmin(UserAdmin):
 
 
 class CourseAdmin(ExportMixin, ModelAdmin):
-    list_display = ('code', 'name')
+    list_display = ('code', 'name', 'color')
 
 
 class StudentAdmin(ExportMixin, ModelAdmin):
@@ -180,6 +180,8 @@ class AttendanceSummaryAdmin(ModelAdmin):
 
     change_list_template = 'admin/attendance_summary_change_list.html'
     date_hierarchy = 'login_ts'
+
+    list_filter = ('student__course',)
 
     # Disable Add Model button
     def has_add_permission(self, request, obj=None):
