@@ -1,13 +1,66 @@
 {% extends "admin/change_list.html" %}
 
+{% load static %}
 {% load humanize %}
 {% load attendance_extras %}
+
+{% block extrastyle %}
+  {{ block.super }}
+  <!-- ChartJS -->
+  <script type="text/javascript" src="{% static 'js/Chart.min.js' %}"></script>
+  <!-- BooostrapJS -->
+  <style src="{% static '\attendance\js\vendor\bootstrap\js\bootstrap.min.js' %}"></style>
+   <!-- Bootstrap CSS -->
+  <!-- <link rel="stylesheet" href="{% static '\attendance\css\vendor\boostrap\css\bootstrap.min.css' %}"> -->
+
+  <style>
+    .chart-container {
+      margin: 0 auto;
+      margin-top: 2em;
+      width:  35em;
+      height: 18em;
+      width: 100%;
+    }
+
+    .float-container {
+      padding: 10px;
+      overflow:auto;
+    }
+
+    .float-child {
+      /* NOTE: Hack-ish, not sure how to make 50% */
+      width: 47%;
+      float: left;
+      padding: 10px;
+  }  
+  </style>
+{% endblock %}
+
 
 {% block content_title %}
   <h1> Attendance Summary </h1>
 {% endblock %}
 
 {% block result_list %}
+
+<div class="float-container">
+  <div class="row">
+    <div class="float-child">
+      <canvas id="student_summary"></canvas>
+    </div>
+    <div class="float-child">
+      <!-- <div class="chart-container"> -->
+        <canvas id="course_summary"></canvas>
+      <!-- </div> -->
+    </div>
+  </div>
+</div>
+<div class="element">
+</div>
+<div class="element">
+</div>
+
+<br /><br />
 
 <div class="results_2">
   <h2> Student Summary </h2>
@@ -47,9 +100,8 @@
   </table>
 
 </div>
-
-<br />
-<br />
+ 
+<br /><br />
 
 <div class="results">
   <h2> Course Summary </h2>
@@ -103,6 +155,72 @@
 
   </table>
 </div>
+
+<script>
+  const ctx1_stud = document.getElementById('student_summary');
+  const ctx1_course = document.getElementById('course_summary');
+
+  let s_data = JSON.parse('{{ student_summary_json | safe }}');
+  let c_data = JSON.parse('{{ summary_json | safe }}');
+
+  let delta = s_data.total_students - s_data.unique_attendees;
+
+  let c_courses = c_data.map(a => a.student__course__code);
+  let c_bg_colors = c_data.map(a => a.student__course__hexcolor);
+  let c_attendance = c_data.map(a => a.total_attendance);
+
+  const student_data = {
+    labels: ["Attendees", "Others"],
+    datasets: [
+      {
+        label: 'Student Data Summary',
+        data: [s_data.unique_attendees, delta],
+        backgroundColor: ["#47B39C", "#FFC154"],
+        hoverOffset: 4
+      }
+    ]
+  };
+  const course_data = {
+    labels: c_courses,
+    datasets: [
+      {
+        label: 'Course Data Summary',
+        data: c_attendance,
+        backgroundColor: c_bg_colors,
+        hoverOffset: 4
+      }
+    ]
+  };
+  const c_options = {
+    legend: {
+      position: 'bottom',
+      labels: {
+        fontColor: 'white',
+        boxWidth: 13,
+      }
+    },
+    elements: {
+      arc: {
+        borderWidth: 0
+      }
+    }
+  };
+
+  const student_chart = {
+    type: 'pie',
+    data: student_data,
+    options: c_options
+  };
+  const course_chart = {
+    type: 'pie',
+    data: course_data,
+    options: c_options
+  };
+
+  new Chart(ctx1_stud, student_chart);
+  new Chart(ctx1_course, course_chart);
+
+</script>
 
 {% endblock %}
 

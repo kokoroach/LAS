@@ -1,3 +1,5 @@
+import json
+
 # Django
 from django import forms
 from django.db.models import Count
@@ -207,7 +209,10 @@ class AttendanceSummaryAdmin(ModelAdmin):
         )
         student_qs['total_students'] = Student.objects.all().count()
 
-        response.context_data['student_summary'] = dict(student_qs)
+        # Student Summary
+        student_summary = dict(student_qs)
+        response.context_data['student_summary'] = student_summary
+        response.context_data['student_summary_json'] = json.dumps(student_summary)  # noqa
 
         # ------------------
         # Course Summary
@@ -215,15 +220,20 @@ class AttendanceSummaryAdmin(ModelAdmin):
         metrics = {
             'total_attendance': Count('student__course__name')
         }
-        response.context_data['summary'] = list(
+        summary = list(
             qs
-            .values('student__course__code', 'student__course__name')
+            .values('student__course__code',
+                    'student__course__name',
+                    'student__course__hexcolor')
             .annotate(**metrics)
             .order_by('-total_attendance')
         )
-        response.context_data['summary_total'] = dict(
-            qs.aggregate(**metrics)
-        )
+        summary_total = dict(qs.aggregate(**metrics))
+
+        # Course Summary
+        response.context_data['summary'] = summary
+        response.context_data['summary_total'] = summary_total
+        response.context_data['summary_json'] = json.dumps(summary)
 
         return response
 
