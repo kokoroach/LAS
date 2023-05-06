@@ -83,7 +83,7 @@ class Student(models.Model):
         return self.user.first_name
 
     @property
-    def last_name(self, student_id=None):
+    def last_name(self):
         return self.user.last_name
 
 
