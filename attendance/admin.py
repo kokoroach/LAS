@@ -66,13 +66,15 @@ class CustomUserAdmin(UserAdmin):
 
 
 class ProgramAdmin(ExportMixin, ModelAdmin):
-    list_display = ('code', 'name', 'color')
+    list_display = ('code', 'name', 'level', 'color')
 
 
 class StudentAdmin(ExportMixin, ModelAdmin):
     form = StudentForm
 
-    _readonly_fields = ('user', 'student_id', '_last_name', '_first_name')
+    _readonly_fields = (
+        'user', 'student_id', '_program_level', '_last_name', '_first_name',
+    )
     list_display = (
         'user', '_last_name', '_first_name', 'program', 'year', 'student_id'
     )
@@ -86,6 +88,10 @@ class StudentAdmin(ExportMixin, ModelAdmin):
     @admin.display(ordering='user__last_name', description='Last Name')
     def _last_name(self, obj):
         return obj.user.last_name
+
+    @admin.display(ordering='program__level', description='Program Level')
+    def _program_level(self, obj):
+        return obj.program.get_level_display()
 
     def get_readonly_fields(self, request, obj=None):
         if obj:
