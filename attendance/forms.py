@@ -33,7 +33,7 @@ class NonstickyTextInput(forms.TextInput):
 
         if kwargs['autofocus']:
             attrs.update({
-                'placeholder': _('Enter your Student ID'),
+                'placeholder': _('Scan your ID Barcode or Enter your Student ID'),
                 'class': 'form-control',
                 'autofocus': True
             })
