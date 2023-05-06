@@ -12,7 +12,7 @@ from django.contrib.auth.admin import UserAdmin
 from import_export.admin import ExportMixin
 from import_export.fields import Field
 from import_export.resources import ModelResource
-from import_export.widgets import ForeignKeyWidget
+from import_export.widgets import ForeignKeyWidget, DateTimeWidget
 
 # In-app
 from .models import Attendance, AttendanceSummary, Program, Student, User
@@ -121,7 +121,11 @@ class AttendanceResource(ModelResource):
         attribute="student",
         widget=ForeignKeyWidget(Student, field='year')
     )
-    login = Field(column_name="Login", attribute="login_ts")
+    login = Field(
+        column_name="Login",
+        attribute="login_ts",
+        widget=DateTimeWidget(format='%m/%d/%Y %I:%M %p')
+    )
 
     class Meta:
         model = Attendance
