@@ -99,7 +99,7 @@
                 <td>{{ data.student.first_name }}</td>
                 <td>{{ data.student.program }}</td>
                 <td>{{ data.student.year }}</td>
-                <td>{{ data.login_ts | date:'Y-m-d H:i' }}</td>
+                <td>{{ data.login_ts | date:'Y-m-d h:i A' }}</td>
               </tr>
             {% endfor %}
           </tbody>
