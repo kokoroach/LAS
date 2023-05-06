@@ -20,7 +20,7 @@ class User(AbstractUser):
         return self.get_username()
 
 
-class Course(models.Model):
+class Program(models.Model):
     code = models.CharField(max_length=15)
     name = models.CharField(max_length=100, blank=True)
     hexcolor = ColorField(default="#FF0000")
@@ -51,7 +51,7 @@ class Student(models.Model):
 
     user = models.OneToOneField(User, on_delete=models.CASCADE, null=True)
     student_id = models.CharField(max_length=100, unique=True)
-    course = models.ForeignKey(Course, null=True, on_delete=models.SET_NULL)
+    program = models.ForeignKey(Program, null=True, on_delete=models.SET_NULL)
     year = models.IntegerField(
         choices=YearLevel.choices,
         default=YearLevel.FIRST

@@ -13,7 +13,7 @@ class AttendanceConfig(AppConfig):
             'staff_admin', {
                 'attendance': ['add', 'change', 'delete', 'view'],
                 'student': ['view'],
-                'course': ['view'],
+                'program': ['view'],
             }
         ),
     ]

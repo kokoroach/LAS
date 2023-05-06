@@ -5,7 +5,7 @@ import re
 from django.core.management.base import BaseCommand
 from django.db import transaction
 
-from attendance.models import User, Student, Course, student_exists
+from attendance.models import User, Student, Program, student_exists
 
 
 LNAME_PREFIX = ['DE LO', 'DE LA', 'DE LAS', 'DEL', 'DOS', 'DAS', 'DE', 'DELAS']
@@ -59,7 +59,7 @@ class Command(BaseCommand):
         first_name, middle_name = split_name(other_name)
         student_id = student['ID No.']
         sex = 'm' if student['Sex'].lower() == 'male' else 'f'
-        course_code = student['Course']
+        program_code = student['Course']
         year = int(student['Year'][0])
 
         _user = {
@@ -67,7 +67,7 @@ class Command(BaseCommand):
             'first_name': first_name,
             'middle_name': middle_name,
         }
-        course, _ = Course.objects.get_or_create(code=course_code)
+        program, _ = Program.objects.get_or_create(code=program_code)
 
         if not student_exists(student_id):
             with transaction.atomic():
@@ -78,6 +78,6 @@ class Command(BaseCommand):
                     user=user,
                     student_id=student_id,
                     sex=sex,
-                    course=course,
+                    program=program,
                     year=year
                 )

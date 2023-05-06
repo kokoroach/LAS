@@ -50,7 +50,7 @@
     </div>
     <div class="float-child">
       <!-- <div class="chart-container"> -->
-        <canvas id="course_summary"></canvas>
+        <canvas id="program_summary"></canvas>
       <!-- </div> -->
     </div>
   </div>
@@ -104,7 +104,7 @@
 <br /><br />
 
 <div class="results">
-  <h2> Course Summary </h2>
+  <h2> Program Summary </h2>
   <table>
     <thead>
       <tr>
@@ -115,7 +115,7 @@
         </th>
         <th>
           <div class="text">
-            <a href="#">Course</a>
+            <a href="#">Program</a>
           </div>
         </th>
         <th>
@@ -136,8 +136,8 @@
     <tbody>
     {% for row in summary %}
       <tr class="{% cycle 'row1' 'row2' %}">
-        <td> {{ row.student__course__code }} </td>
-        <td> {{ row.student__course__name }} </td>
+        <td> {{ row.student__program__code }} </td>
+        <td> {{ row.student__program__name }} </td>
         <td> {{ row.total_attendance | intcomma }} </td>
         <td>
           <strong> {{ row.total_attendance | default:0 |  percentof:summary_total.total_attendance }} </strong>
@@ -158,15 +158,15 @@
 
 <script>
   const ctx1_stud = document.getElementById('student_summary');
-  const ctx1_course = document.getElementById('course_summary');
+  const ctx1_program = document.getElementById('program_summary');
 
   let s_data = JSON.parse('{{ student_summary_json | safe }}');
   let c_data = JSON.parse('{{ summary_json | safe }}');
 
   let delta = s_data.total_students - s_data.unique_attendees;
 
-  let c_courses = c_data.map(a => a.student__course__code);
-  let c_bg_colors = c_data.map(a => a.student__course__hexcolor);
+  let c_programs = c_data.map(a => a.student__program__code);
+  let c_bg_colors = c_data.map(a => a.student__program__hexcolor);
   let c_attendance = c_data.map(a => a.total_attendance);
 
   const student_data = {
@@ -180,11 +180,12 @@
       }
     ]
   };
-  const course_data = {
-    labels: c_courses,
+
+  const program_data = {
+    labels: c_programs,
     datasets: [
       {
-        label: 'Course Data Summary',
+        label: 'Program Data Summary',
         data: c_attendance,
         backgroundColor: c_bg_colors,
         hoverOffset: 4
@@ -210,14 +211,14 @@
     data: student_data,
     options: c_options
   };
-  const course_chart = {
+  const program_chart = {
     type: 'pie',
-    data: course_data,
+    data: program_data,
     options: c_options
   };
 
   new Chart(ctx1_stud, student_chart);
-  new Chart(ctx1_course, course_chart);
+  new Chart(ctx1_program, program_chart);
 
 </script>
 

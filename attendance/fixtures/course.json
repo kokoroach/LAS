@@ -1,6 +1,6 @@
 [
     {
-        "model": "attendance.course",
+        "model": "attendance.program",
         "pk": 1,
         "fields": {
             "code": "BSCS",
@@ -8,7 +8,7 @@
         }
     },
     {
-        "model": "attendance.course",
+        "model": "attendance.program",
         "pk": 2,
         "fields":{
             "code": "BSIT",
