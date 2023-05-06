@@ -41,3 +41,14 @@
   width: 3rem;
   padding-right: 1.5rem;
 }
+
+/* Backgrounds */
+.bg-green-dark {
+  --bs-table-bg: #093916;
+}
+.bg-green-light {
+  background-color: #B5C3B9;
+}
+.bg-white {
+  background-color: #fff;
+}
