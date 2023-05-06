@@ -51,7 +51,7 @@ class Student(models.Model):
 
     class EducationLevel(models.TextChoices):
         SHS = 'shs', 'Senior High School'
-        UND = 'und', 'Undegraduate'
+        UND = 'und', 'Undergraduate'
         GRD = 'grd', 'Graduate'
 
     user = models.OneToOneField(User, on_delete=models.CASCADE, null=True)

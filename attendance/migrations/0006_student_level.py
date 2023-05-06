@@ -13,6 +13,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='student',
             name='level',
-            field=models.CharField(choices=[('shs', 'Senior High School'), ('und', 'Undegraduate'), ('grd', 'Graduate')], default='und', max_length=3),
+            field=models.CharField(choices=[('shs', 'Senior High School'), ('und', 'Undergraduate'), ('grd', 'Graduate')], default='und', max_length=3),
         ),
     ]
