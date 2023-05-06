@@ -141,7 +141,7 @@ class AttendanceAdmin(ExportMixin, ModelAdmin):
         'login_ts'
     )
     list_filter = (
-        'student__level',
+        'student__program__level',
         'student__program',
         'student__year',
         'student__sex'
@@ -193,7 +193,7 @@ class AttendanceSummaryAdmin(ModelAdmin):
     date_hierarchy = 'login_ts'
 
     list_filter = (
-        'student__level',
+        'student__program__level',
         'student__program',
         'student__year',
         'student__sex'
