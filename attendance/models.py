@@ -49,6 +49,11 @@ class Student(models.Model):
         FOURTH = 4, '4'
         FIFTH = 5, '5'
 
+    class EducationLevel(models.TextChoices):
+        SHS = 'shs', 'Senior High School'
+        UND = 'und', 'Undegraduate'
+        GRD = 'grd', 'Graduate'
+
     user = models.OneToOneField(User, on_delete=models.CASCADE, null=True)
     student_id = models.CharField(max_length=100, unique=True)
     program = models.ForeignKey(Program, null=True, on_delete=models.SET_NULL)
@@ -57,6 +62,11 @@ class Student(models.Model):
         default=YearLevel.FIRST
     )
     sex = models.CharField(max_length=1, choices=Sex.choices, default=Sex.MALE)
+    level = models.CharField(
+        max_length=3,
+        choices=EducationLevel.choices,
+        default=EducationLevel.UND
+    )
 
     def __str__(self):
         return str(self.user)
