@@ -136,7 +136,12 @@ class AttendanceAdmin(ExportMixin, ModelAdmin):
         'student', '_last_name', '_first_name', 'get_program', 'get_year',
         'login_ts'
     )
-    list_filter = ('student__program', 'student__year')
+    list_filter = (
+        'student__level',
+        'student__program',
+        'student__year',
+        'student__sex'
+    )
     search_fields = [
         'student__student_id', 'student__user__first_name',
         'student__user__last_name'
@@ -183,7 +188,12 @@ class AttendanceSummaryAdmin(ModelAdmin):
     change_list_template = 'admin/attendance_summary_change_list.html'
     date_hierarchy = 'login_ts'
 
-    list_filter = ('student__program',)
+    list_filter = (
+        'student__level',
+        'student__program',
+        'student__year',
+        'student__sex'
+    )
 
     # Disable Add Model button
     def has_add_permission(self, request, obj=None):
