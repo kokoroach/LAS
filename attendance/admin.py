@@ -227,7 +227,15 @@ class AttendanceSummaryAdmin(ModelAdmin):
             .values('student__id')
             .aggregate(unique_attendees=Count('student__id', distinct=True))
         )
-        student_qs['total_students'] = Student.objects.all().count()
+
+        # Pass the GET params passed
+        program = request.GET.get('student__program__level__exact')
+
+        relative_total = Student.objects.all().count()
+        if program:
+            relative_total = Student.objects.filter(
+                program__level=program).count()
+        student_qs['total_students'] = relative_total
 
         # Student Summary
         student_summary = dict(student_qs)
