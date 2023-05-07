@@ -18,12 +18,12 @@ DB_PASSWORD = os.getenv('DB_ROOT_PASSWORD')
 DB_NAME = os.getenv('DB_NAME')
 
 # CONTAINERS
-MAIN_APP_NAME = 'las_app'  # based on docker-compose's `container_name`
-DB_SERVICE_NAME = 'db'  # based docker-compose's "service" name
+MAIN_APP_NAME = os.getenv('MAIN_APP_NAME')      # based on docker-compose's `container_name`
+DB_SERVICE_NAME = os.getenv('DB_SERVICE_NAME')  # based docker-compose's "service" name
 
 # LOCAL BACKUP DIR
-BACKUP_DIR = "E:\\"
-BACKUP_FILE = 'backup.sql'
+BACKUP_DIR = os.getenv('BACKUP_DIR')
+BACKUP_FILE = os.getenv('BACKUP_FILE')
 
 
 def execute_shell(command, strip=False, input=None):
