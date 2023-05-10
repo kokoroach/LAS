@@ -20,10 +20,21 @@ class User(AbstractUser):
         return self.get_username()
 
 
-class Course(models.Model):
+class Program(models.Model):
+
+    class Level(models.TextChoices):
+        SHS = 'shs', 'Senior High School'
+        UND = 'und', 'Undergraduate'
+        GRD = 'grd', 'Graduate'
+
     code = models.CharField(max_length=15)
     name = models.CharField(max_length=100, blank=True)
     hexcolor = ColorField(default="#FF0000")
+    level = models.CharField(
+        max_length=3,
+        choices=Level.choices,
+        default=Level.UND
+    )
 
     def color(self):
         return format_html(
@@ -51,7 +62,7 @@ class Student(models.Model):
 
     user = models.OneToOneField(User, on_delete=models.CASCADE, null=True)
     student_id = models.CharField(max_length=100, unique=True)
-    course = models.ForeignKey(Course, null=True, on_delete=models.SET_NULL)
+    program = models.ForeignKey(Program, null=True, on_delete=models.SET_NULL)
     year = models.IntegerField(
         choices=YearLevel.choices,
         default=YearLevel.FIRST
@@ -72,7 +83,7 @@ class Student(models.Model):
         return self.user.first_name
 
     @property
-    def last_name(self, student_id=None):
+    def last_name(self):
         return self.user.last_name
 
 

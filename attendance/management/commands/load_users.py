@@ -5,7 +5,7 @@ import re
 from django.core.management.base import BaseCommand
 from django.db import transaction
 
-from attendance.models import User, Student, Course, student_exists
+from attendance.models import User, Student, Program, student_exists
 
 
 LNAME_PREFIX = ['DE LO', 'DE LA', 'DE LAS', 'DEL', 'DOS', 'DAS', 'DE', 'DELAS']
@@ -39,9 +39,16 @@ class Command(BaseCommand):
 
     def add_arguments(self, parser):
         parser.add_argument('file')
+        parser.add_argument(
+            '--level',
+            nargs='?',
+            default=Program.Level.UND,
+            choices=[i[0] for i in Program.Level.choices]
+        )
 
     def handle(self, *args, **options):
         data_file = options['file']
+        level = options['level']
 
         if not os.path.isfile(data_file):
             raise FileNotFoundError('Please check file path')
@@ -50,16 +57,16 @@ class Command(BaseCommand):
             # reading the csv file using DictReader
             csv_reader = csv.DictReader(csv_file)
             for row in csv_reader:
-                self.add_student(row)
+                self.add_student(row, level)
 
-    def add_student(self, student):
+    def add_student(self, student, level):
         # Get student info
         last_name, other_name = student['Student Name'].split(',')
         last_name = last_name.strip().title()
         first_name, middle_name = split_name(other_name)
         student_id = student['ID No.']
         sex = 'm' if student['Sex'].lower() == 'male' else 'f'
-        course_code = student['Course']
+        program_code = student['Program']
         year = int(student['Year'][0])
 
         _user = {
@@ -67,7 +74,10 @@ class Command(BaseCommand):
             'first_name': first_name,
             'middle_name': middle_name,
         }
-        course, _ = Course.objects.get_or_create(code=course_code)
+        program, _ = Program.objects.get_or_create(
+            code=program_code,
+            level=level
+        )
 
         if not student_exists(student_id):
             with transaction.atomic():
@@ -78,6 +88,6 @@ class Command(BaseCommand):
                     user=user,
                     student_id=student_id,
                     sex=sex,
-                    course=course,
+                    program=program,
                     year=year
                 )

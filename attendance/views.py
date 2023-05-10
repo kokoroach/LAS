@@ -40,7 +40,7 @@ def add_attendance(request):
             attendance = Attendance(student=student)
             attendance.save()
 
-            welcome = 'Welcome back, %s!' % student.first_name
+            welcome = 'Welcome back po, %s!' % student.first_name
             messages.success(request, welcome)
 
             return redirect(reverse('index'))

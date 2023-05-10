@@ -12,10 +12,10 @@ from django.contrib.auth.admin import UserAdmin
 from import_export.admin import ExportMixin
 from import_export.fields import Field
 from import_export.resources import ModelResource
-from import_export.widgets import ForeignKeyWidget
+from import_export.widgets import ForeignKeyWidget, DateTimeWidget
 
 # In-app
-from .models import Attendance, AttendanceSummary, Course, Student, User
+from .models import Attendance, AttendanceSummary, Program, Student, User
 
 
 class StudentForm(forms.ModelForm):
@@ -65,19 +65,21 @@ class CustomUserAdmin(UserAdmin):
         return tuple(new_fieldsets)
 
 
-class CourseAdmin(ExportMixin, ModelAdmin):
-    list_display = ('code', 'name', 'color')
+class ProgramAdmin(ExportMixin, ModelAdmin):
+    list_display = ('code', 'name', 'level', 'color')
 
 
 class StudentAdmin(ExportMixin, ModelAdmin):
     form = StudentForm
 
-    _readonly_fields = ('user', 'student_id', '_last_name', '_first_name')
+    _readonly_fields = (
+        'user', 'student_id', '_program_level', '_last_name', '_first_name',
+    )
     list_display = (
-        'user', '_last_name', '_first_name', 'course', 'year', 'student_id'
+        'user', '_last_name', '_first_name', 'program', 'year', 'student_id'
     )
     search_fields = ['student_id', 'user__first_name', 'user__last_name']
-    list_filter = ['course', 'year']
+    list_filter = ['program', 'year']
 
     @admin.display(ordering='user__first_name', description='First Name')
     def _first_name(self, obj):
@@ -86,6 +88,10 @@ class StudentAdmin(ExportMixin, ModelAdmin):
     @admin.display(ordering='user__last_name', description='Last Name')
     def _last_name(self, obj):
         return obj.user.last_name
+
+    @admin.display(ordering='program__level', description='Program Level')
+    def _program_level(self, obj):
+        return obj.program.get_level_display()
 
     def get_readonly_fields(self, request, obj=None):
         if obj:
@@ -111,32 +117,41 @@ class AttendanceResource(ModelResource):
         attribute="student__user",
         widget=ForeignKeyWidget(User, field='first_name')
     )
-    course = Field(
-        column_name="Course",
+    program = Field(
+        column_name="Program",
         attribute="student",
-        widget=ForeignKeyWidget(Student, field='course')
+        widget=ForeignKeyWidget(Student, field='program')
     )
     year = Field(
         column_name="Year",
         attribute="student",
         widget=ForeignKeyWidget(Student, field='year')
     )
-    login = Field(column_name="Login", attribute="login_ts")
+    login = Field(
+        column_name="Login",
+        attribute="login_ts",
+        widget=DateTimeWidget(format='%m/%d/%Y %I:%M %p')
+    )
 
     class Meta:
         model = Attendance
         fields = (
-            '_id', 'student', 'last_name', 'first_name', 'course',
+            '_id', 'student', 'last_name', 'first_name', 'program',
             'year', 'login'
         )
 
 
 class AttendanceAdmin(ExportMixin, ModelAdmin):
     list_display = (
-        'student', '_last_name', '_first_name', 'get_course', 'get_year',
+        'student', '_last_name', '_first_name', 'get_program', 'get_year',
         'login_ts'
     )
-    list_filter = ('student__course', 'student__year')
+    list_filter = (
+        'student__program__level',
+        'student__program',
+        'student__year',
+        'student__sex'
+    )
     search_fields = [
         'student__student_id', 'student__user__first_name',
         'student__user__last_name'
@@ -146,9 +161,9 @@ class AttendanceAdmin(ExportMixin, ModelAdmin):
     raw_id_fields = ('student',)
     resource_class = AttendanceResource
 
-    @admin.display(ordering='student__course', description='Course')
-    def get_course(self, obj):
-        return obj.student.course
+    @admin.display(ordering='student__program', description='Program')
+    def get_program(self, obj):
+        return obj.student.program
 
     @admin.display(ordering='student__year', description='Year')
     def get_year(self, obj):
@@ -183,7 +198,12 @@ class AttendanceSummaryAdmin(ModelAdmin):
     change_list_template = 'admin/attendance_summary_change_list.html'
     date_hierarchy = 'login_ts'
 
-    list_filter = ('student__course',)
+    list_filter = (
+        'student__program__level',
+        'student__program',
+        'student__year',
+        'student__sex'
+    )
 
     # Disable Add Model button
     def has_add_permission(self, request, obj=None):
@@ -207,7 +227,15 @@ class AttendanceSummaryAdmin(ModelAdmin):
             .values('student__id')
             .aggregate(unique_attendees=Count('student__id', distinct=True))
         )
-        student_qs['total_students'] = Student.objects.all().count()
+
+        # Pass the GET params passed
+        program = request.GET.get('student__program__level__exact')
+
+        relative_total = Student.objects.all().count()
+        if program:
+            relative_total = Student.objects.filter(
+                program__level=program).count()
+        student_qs['total_students'] = relative_total
 
         # Student Summary
         student_summary = dict(student_qs)
@@ -215,22 +243,35 @@ class AttendanceSummaryAdmin(ModelAdmin):
         response.context_data['student_summary_json'] = json.dumps(student_summary)  # noqa
 
         # ------------------
-        # Course Summary
+        # Program Summary
         # ------------------
         metrics = {
-            'total_attendance': Count('student__course__name')
+            'total_attendance': Count('student__program__name')
         }
         summary = list(
             qs
-            .values('student__course__code',
-                    'student__course__name',
-                    'student__course__hexcolor')
+            .values('student__program__code',
+                    'student__program__name',
+                    'student__program__hexcolor')
             .annotate(**metrics)
             .order_by('-total_attendance')
         )
         summary_total = dict(qs.aggregate(**metrics))
 
-        # Course Summary
+        # Program Total
+        _programs = qs.values_list('student__program__code', flat=True)
+        _programs = (
+            Student.objects.values('program__code')
+            .filter(program__code__in=_programs)
+            .annotate(total=Count('program__code'))
+        )
+        program = {p['program__code']: p['total'] for p in _programs}
+
+        # Append program population
+        for item in summary:
+            course = item['student__program__code']
+            item['population'] = program[course]
+
         response.context_data['summary'] = summary
         response.context_data['summary_total'] = summary_total
         response.context_data['summary_json'] = json.dumps(summary)
@@ -239,7 +280,7 @@ class AttendanceSummaryAdmin(ModelAdmin):
 
 
 admin.site.register(Attendance, AttendanceAdmin)
-admin.site.register(Course, CourseAdmin)
+admin.site.register(Program, ProgramAdmin)
 admin.site.register(Student, StudentAdmin)
 admin.site.register(User, CustomUserAdmin)
 admin.site.register(AttendanceSummary, AttendanceSummaryAdmin)
