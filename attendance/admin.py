@@ -258,7 +258,20 @@ class AttendanceSummaryAdmin(ModelAdmin):
         )
         summary_total = dict(qs.aggregate(**metrics))
 
-        # Program Summary
+        # Program Total
+        _programs = qs.values_list('student__program__code', flat=True)
+        _programs = (
+            Student.objects.values('program__code')
+            .filter(program__code__in=_programs)
+            .annotate(total=Count('program__code'))
+        )
+        program = {p['program__code']: p['total'] for p in _programs}
+
+        # Append program population
+        for item in summary:
+            course = item['student__program__code']
+            item['population'] = program[course]
+
         response.context_data['summary'] = summary
         response.context_data['summary_total'] = summary_total
         response.context_data['summary_json'] = json.dumps(summary)

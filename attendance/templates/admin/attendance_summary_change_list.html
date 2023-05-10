@@ -43,25 +43,6 @@
 
 {% block result_list %}
 
-<div class="float-container">
-  <div class="row">
-    <div class="float-child">
-      <canvas id="student_summary"></canvas>
-    </div>
-    <div class="float-child">
-      <!-- <div class="chart-container"> -->
-        <canvas id="program_summary"></canvas>
-      <!-- </div> -->
-    </div>
-  </div>
-</div>
-<div class="element">
-</div>
-<div class="element">
-</div>
-
-<br /><br />
-
 <div class="results_2">
   <h2> Student Summary </h2>
   <table>
@@ -120,13 +101,18 @@
         </th>
         <th>
           <div class="text">
-            <a href="#">Total</a>
+            <a href="#">Attendees</a>
+          </div>
+        </th>
+        <th>
+          <div class="text">
+            <a href="#">Population</a>
           </div>
         </th>
         <th>
           <div class="text">
             <a href="#">
-              <strong>% of Total Attendance</strong>
+              <strong>% of Attendance</strong>
             </a>
           </div>
         </th>
@@ -139,8 +125,9 @@
         <td> {{ row.student__program__code }} </td>
         <td> {{ row.student__program__name }} </td>
         <td> {{ row.total_attendance | intcomma }} </td>
+        <td> {{ row.population | intcomma }} </td>
         <td>
-          <strong> {{ row.total_attendance | default:0 |  percentof:summary_total.total_attendance }} </strong>
+          <strong> {{ row.total_attendance | default:0 |  percentof:row.population }} </strong>
         </td>
       </tr>
     {% endfor %}
@@ -149,11 +136,31 @@
         <td> Total </td>
         <td></td>
         <td> {{ summary_total.total_attendance | intcomma }} </td>
-        <td> 100% </td>
+        <td> {{ student_summary.total_students }} </td>
+        <td> {{ summary_total.total_attendance | default:0 |  percentof:student_summary.total_students }} </td>
       </tr>
     </tbody>
 
   </table>
+</div>
+
+<br /><br />
+
+<div class="float-container">
+  <div class="row">
+    <div class="float-child">
+      <canvas id="student_summary"></canvas>
+    </div>
+    <div class="float-child">
+      <!-- <div class="chart-container"> -->
+        <canvas id="program_summary"></canvas>
+      <!-- </div> -->
+    </div>
+  </div>
+</div>
+<div class="element">
+</div>
+<div class="element">
 </div>
 
 <script>
